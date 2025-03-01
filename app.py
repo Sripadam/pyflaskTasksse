@@ -32,7 +32,9 @@ def send_notification(task_id, message):
 @app.route('/api/get-tasks', methods=['GET']) 
 def get_tasks():
     try: 
-        return jsonify(tasks), 201
+        return jsonify({ "message": f"Tasks retrieved successfully.",
+                         "tasks": tasks
+                        }), 201            
     except Exception as e:
         return jsonify({'error': 'Error retrieving tasks: {e}'}), 404 
 
@@ -51,7 +53,8 @@ def create_task():
             datetime.date.today().strftime("%Y-%m-%d") 
         }  
         tasks.append(new_task) 
-        return jsonify(new_task), 201 
+        return jsonify({ "message": f"New task with id {next_task_id} is created successfully.",
+                         "task": new_task }), 201
     except Exception as e:
         return jsonify({'error': 'Error create tasks: {e}'}), 404 
 
@@ -71,7 +74,10 @@ def update_task(task_id):
 
                 time.sleep(2)  # Simulate some work (e.g., sending email) 
                 print(f"Notification sent for task {task_id}") 
-                return jsonify(task), 200 
+                return jsonify({
+                            "message": f"Task {task_id} updated successfully, and notification has been sent.",
+                            "task": task
+                        }), 200
 
         return jsonify({'error': 'Task not found'}), 404 
     except Exception as e:
@@ -84,7 +90,7 @@ def delete_task(task_id):
         for i, task in enumerate(tasks): 
             if task['id'] == task_id: 
                 del tasks[i] 
-                return jsonify({'message': 'Task deleted'}), 204 
+                return jsonify({'message': 'Task deleted successfully'}), 200
         return jsonify({'error': 'Task not found'}), 404 
     except Exception as e:
         return jsonify({'error': 'Error delete a task: {e}'}), 404
